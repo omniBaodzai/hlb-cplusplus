@@ -1,4 +1,4 @@
-/* Bài toán authorization */ 
+/* Minh họa authorization */ 
 #include <iostream>
 #include <string>
 

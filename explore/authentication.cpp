@@ -1,4 +1,4 @@
-/* Bài toán authentication cơ bản */
+/* Minh họa authentication */
 #include <iostream>
 #include <string>
 
@@ -15,9 +15,15 @@ int main()
     cin >> password;
 
     // Authentication: Kiểm tra danh tính
-    if ((username == "admin") && (password == "123456"))
+    if (username == "admin" && password == "admin123")
     {
-        cout << "Dang nhap thanh cong!";
+        cout << "Dang nhap thanh cong!\n";
+        cout << "Xin chao admin!\n";
+    }
+    else if (username == "user" && password == "abc123")
+    {
+        cout << "Dang nhap thanh cong!\n";
+        cout << "Xin chao user!\n";
     }
     else
     {
