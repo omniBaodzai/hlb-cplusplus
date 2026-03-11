@@ -10,7 +10,10 @@ int main()
     int x;
     cin >> x;
 
-    long long result = (long long)(x * x * x) + 3 * (long long)x * x + x + 1;
+    // int result = 1ll * (x * x * x) + 1ll * 3 * x * x + x + 1;
+    // mặc dù vế bên phải không bị tràn, nhưng vế bên trái vẫn đang ở kiểu int
+    // nên sẽ bị tràn dữ liệu
+    long long result = (long long)(x * x * x) + (long long)3 * x * x + x + 1;
     cout << result;
 
     return 0;
