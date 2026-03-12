@@ -43,6 +43,5 @@ int main()
         cout << "Ban chi co quyen su dung co ban.\n";
     }
 
-
     return 0;
 }
