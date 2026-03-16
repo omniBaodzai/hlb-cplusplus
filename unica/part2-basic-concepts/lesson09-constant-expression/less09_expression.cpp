@@ -4,7 +4,7 @@
 chuyển đổi kiểu dữ liệu của chúng về cùng một kiểu theo quy tắc: kiểu dữ liệu thấp hơn 
 sẽ được chuyển thành kiểu dữ liệu cao hơn. Quá trình này gọi là chuyển đổi kiểu ngầm định
 (implicit type conversion)
-- Thứ tự ưu tiên kiểu trong C++: char → int → float → double → long double
+- Thứ tự ưu tiên kiểu chuyển kiểu trong C++: char → int → float → double → long double
 */
 #include <iostream>
 

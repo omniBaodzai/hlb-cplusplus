@@ -3,7 +3,6 @@
 - Cú pháp: data_type + tên biến
 + Ví dụ: int dien_tich, double diem_trung_binh,...
 */
-// Kích thước và phạm vi của kiểu dữ liệu phụ phuộc vào CPU và trình biên dịch
 #include <iostream>
 
 using namespace std;
