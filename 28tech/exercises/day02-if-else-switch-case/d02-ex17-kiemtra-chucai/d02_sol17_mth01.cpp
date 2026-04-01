@@ -20,5 +20,6 @@ int main()
         cout << "DIGIT";
     else
         cout << "SPECIAL";
+        
     return 0;
 }
