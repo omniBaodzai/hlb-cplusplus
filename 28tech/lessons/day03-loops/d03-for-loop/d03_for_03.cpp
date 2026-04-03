@@ -5,7 +5,7 @@ using namespace std;
 int main()
 {
     int i;
-    for (i = 7; i > 1; i -= 2)
+    for (i = 1; i < 18; i *= 2)
     {
         cout << i << endl;
     }
