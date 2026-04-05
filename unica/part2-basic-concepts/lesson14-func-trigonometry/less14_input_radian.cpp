@@ -14,16 +14,22 @@ int main() {
     cout << "cos(x) = " << cosx << endl;
 
     // Kiểm tra trước khi tính tan
-    if (fabs(cosx) < 1e-12) {
+    if (fabs(cosx) < 1e-12)
+    {
         cout << "tan(x) khong xac dinh!" << endl;
-    } else {
+    } 
+    else
+    {
         cout << "tan(x) = " << tan(rad) << endl;
     }
 
     // Kiểm tra trước khi tính cot
-    if (fabs(sinx) < 1e-12) {
+    if (fabs(sinx) < 1e-12)
+    {
         cout << "cot(x) khong xac dinh!" << endl;
-    } else {
+    } 
+    else
+    {
         cout << "cot(x) = " << cosx / sinx << endl;
     }
 
