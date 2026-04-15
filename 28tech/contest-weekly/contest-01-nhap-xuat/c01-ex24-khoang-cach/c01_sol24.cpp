@@ -12,7 +12,7 @@ int main()
     int x1, y1;
     cin >> x1 >> y1;
     
-    double khoang_cach = sqrt(1.0 * (0 - x1) * (0 - x1) + 1.0 * (0 - y1) * (0 - y1));
+    double khoang_cach = sqrt(1ll * (0 - x1) * (0 - x1) + 1ll * (0 - y1) * (0 - y1));
 
     cout << fixed << setprecision(2) << khoang_cach;
 

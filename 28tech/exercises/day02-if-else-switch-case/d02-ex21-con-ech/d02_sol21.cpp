@@ -8,7 +8,7 @@ int main()
     cin >> a >> b >> k;
 
     // Số lần nhảy sang phải
-    long long phai = (k + 1) / 2;
+    long long phai = (k / 2) + 1;
 
     // Số lần nhảy sang trái
     long long trai = k / 2;

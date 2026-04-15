@@ -13,8 +13,7 @@ int main()
     // long long so_luong_boi_5 = n / 5;
     // long long boi_chung_nho_nhat = n / 3 * 5;
 
-    int res = n / 3 + n / 5 - n / 15; // tràn dữ liệuf
-    cout << res;
+    int res = n / 3 + n / 5 - n / 15; // tràn dữ liệu
 
     return 0;
 }

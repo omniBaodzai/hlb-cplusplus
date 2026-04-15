@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MasterCode • Học Lập Trình Thực Chiến</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Space+Grotesk:wght@500&amp;display=swap');
+        
+        :root {
+            --tw-color-primary: #00f0ff;
+        }
+        
+        * {
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+        }
+        
+        .tailwind-ready * {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .logo-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .hero-bg {
+            background: linear-gradient(90deg, #0f172a 0%, #1e2937 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgb(0 240 255 / 0.15);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #00f0ff;
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        
+        .video-container {
+            position: relative;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.2);
+        }
+        
+        .lesson-active {
+            background: rgba(0, 240, 255, 0.1);
+            border-left: 4px solid #00f0ff;
+        }
+        
+        .comment-bubble {
+            animation: bubbleIn 0.3s ease forwards;
+        }
+        
+        @keyframes bubbleIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-header {
+            position: relative;
+        }
+        
+        .section-header:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, #00f0ff, #00b8ff);
+            bottom: -6px;
+            left: 0;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="tailwind-ready bg-slate-950 text-slate-200">
+    <!-- NAVBAR -->
+    <nav class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-screen-2xl mx-auto">
+            <div class="px-8 py-5 flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center gap-x-2">
+                    <div class="w-9 h-9 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl flex items-center justify-center shadow-inner">
+                        <i class="fa-solid fa-code text-white text-2xl rotate-12"></i>
+                    </div>
+                    <h1 class="logo-font text-3xl tracking-[-1px] text-white">MasterCode</h1>
+                    <span class="text-xs font-medium bg-cyan-400 text-slate-900 px-2.5 py-px rounded-full -mt-3">VN</span>
+                </div>
+
+                <!-- Menu -->
+                <div class="hidden md:flex items-center gap-x-8 text-sm font-medium">
+                    <a onclick="navigateTo('home')" class="nav-link cursor-pointer flex items-center gap-x-1 hover:text-cyan-400">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Trang chủ</span>
+                    </a>
+                    <a onclick="navigateTo('courses')" class="nav-link cursor-pointer flex items-center gap-x-1 hover:text-cyan-400">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span>Khóa học</span>
+                    </a>
+                    <a onclick="navigateTo('my-learning')" class="nav-link cursor-pointer flex items-center gap-x-1 hover:text-cyan-400" id="my-learning-link">
+                        <i class="fa-solid fa-play-circle"></i>
+                        <span>Học của tôi</span>
+                    </a>
+                    <a href="#" class="nav-link cursor-pointer flex items-center gap-x-1 hover:text-cyan-400">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Cộng đồng</span>
+                    </a>
+                </div>
+
+                <!-- Search -->
+                <div class="flex-1 max-w-md mx-8 relative hidden md:block">
+                    <input 
+                        id="search-input"
+                        type="text" 
+                        placeholder="Tìm khóa học, bài giảng... (Python, React...)"
+                        onkeyup="if(event.keyCode===13) handleSearch()"
+                        class="w-full bg-slate-800 text-white placeholder:text-slate-400 border border-slate-700 focus:border-cyan-400 rounded-3xl py-3 px-6 pl-12 focus:outline-none text-sm">
+                    <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                </div>
+
+                <!-- Right side -->
+                <div class="flex items-center gap-x-4">
+                    <button onclick="toggleCart()" class="relative w-10 h-10 flex items-center justify-center hover:bg-slate-800 rounded-2xl">
+                        <i class="fa-solid fa-cart-shopping text-xl"></i>
+                        <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">2</span>
+                    </button>
+                    
+                    <!-- User -->
+                    <div onclick="toggleUserMenu()" class="flex items-center gap-x-2 cursor-pointer">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-semibold">Nguyễn Văn Bảo</p>
+                            <p class="text-xs text-emerald-400">Level 12 • Pro</p>
+                        </div>
+                        <div class="w-9 h-9 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center ring-2 ring-cyan-400 ring-offset-2 ring-offset-slate-900">
+                            <i class="fa-solid fa-user text-white"></i>
+                        </div>
+                    </div>
+
+                    <!-- Mobile menu button -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-bars" id="mobile-icon"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-t border-slate-800 px-8 py-4">
+                <div class="flex flex-col gap-4 text-sm">
+                    <a onclick="navigateTo('home');toggleMobileMenu()" class="flex items-center gap-3 py-3 px-4 hover:bg-slate-800 rounded-3xl">
+                        <i class="fa-solid fa-house w-5"></i> Trang chủ
+                    </a>
+                    <a onclick="navigateTo('courses');toggleMobileMenu()" class="flex items-center gap-3 py-3 px-4 hover:bg-slate-800 rounded-3xl">
+                        <i class="fa-solid fa-book-open w-5"></i> Khóa học
+                    </a>
+                    <a onclick="navigateTo('my-learning');toggleMobileMenu()" class="flex items-center gap-3 py-3 px-4 hover:bg-slate-800 rounded-3xl">
+                        <i class="fa-solid fa-play-circle w-5"></i> Học của tôi
+                    </a>
+                    <div class="h-px bg-slate-700 my-2"></div>
+                    <div class="flex items-center justify-between text-sm">
+                        <button onclick="toggleCart();toggleMobileMenu()" class="flex-1 flex justify-center items-center gap-2 py-3 bg-slate-800 rounded-3xl">
+                            <i class="fa-solid fa-cart-shopping"></i> Giỏ hàng (2)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HOME SECTION -->
+    <div id="home-section">
+        <!-- HERO -->
+        <div class="hero-bg pt-16 pb-20">
+            <div class="max-w-screen-2xl mx-auto px-8 grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md text-white text-sm font-medium px-5 h-9 rounded-3xl border border-white/20">
+                        <span class="relative flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-400"></span>
+                        </span>
+                        MỚI: Khóa AI Engineer 2026
+                    </div>
+                    
+                    <h1 class="text-6xl md:text-7xl font-bold leading-none logo-font tracking-[-2px]">
+                        Học lập trình.<br>Thực chiến.<br>Thay đổi tương lai.
+                    </h1>
+                    
+                    <p class="text-xl text-slate-300 max-w-lg">
+                        Hơn 120 khóa học từ các mentor đang làm việc tại Google, Meta, VNG, FPT. 
+                        Học xong → có job ngay. Đảm bảo hoàn tiền nếu không hài lòng.
+                    </p>
+                    
+                    <div class="flex items-center gap-4">
+                        <button onclick="navigateTo('courses')" 
+                                class="bg-cyan-400 hover:bg-cyan-300 text-slate-900 font-semibold px-8 h-14 rounded-3xl flex items-center gap-3 text-lg shadow-lg shadow-cyan-500/30">
+                            <span>Bắt đầu miễn phí</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        
+                        <button onclick="watchDemoVideo()" 
+                                class="border border-white/30 hover:border-white/60 font-medium px-8 h-14 rounded-3xl flex items-center gap-3 text-lg">
+                            <i class="fa-solid fa-play-circle text-2xl"></i>
+                            Xem demo 60s
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center gap-x-8 text-sm">
+                        <div class="flex items-center">
+                            <div class="flex -space-x-4">
+                                <div class="w-7 h-7 bg-blue-500 rounded-2xl ring-2 ring-slate-900 flex items-center justify-center text-xs">👨‍💻</div>
+                                <div class="w-7 h-7 bg-purple-500 rounded-2xl ring-2 ring-slate-900 flex items-center justify-center text-xs">🧠</div>
+                                <div class="w-7 h-7 bg-pink-500 rounded-2xl ring-2 ring-slate-900 flex items-center justify-center text-xs">🚀</div>
+                            </div>
+                            <p class="ml-4">+42.893 học viên đã thành công</p>
+                        </div>
+                        <div class="flex items-center gap-1 text-emerald-400">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span class="ml-2 text-slate-300">4.98/5 • 12.4k đánh giá</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Hero visual -->
+                <div class="relative hidden md:block">
+                    <div class="bg-slate-800/50 backdrop-blur-xl border border-cyan-400/20 rounded-3xl p-3 shadow-2xl">
+                        <div class="bg-black rounded-3xl p-4">
+                            <div class="flex items-center justify-between mb-4 px-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                    <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                                    <div class="w-3 h-3 bg-emerald-400 rounded-full"></div>
+                                </div>
+                                <div class="text-xs font-mono text-cyan-400">main.py • Python</div>
+                            </div>
+                            <pre class="text-emerald-300 font-mono text-sm leading-relaxed overflow-hidden bg-slate-950 p-6 rounded-2xl"><code>def learn_programming():
+    print("Chào mừng đến MasterCode!")
+    # Bạn đã sẵn sàng thay đổi cuộc đời chưa?
+    return "🚀 Job-ready in 8 weeks"</code></pre>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 bg-slate-900 border border-cyan-400 rounded-3xl px-6 py-4 shadow-xl flex items-center gap-4">
+                        <div class="text-4xl">🎉</div>
+                        <div>
+                            <p class="font-semibold">Bạn đã hoàn thành 87% khóa học</p>
+                            <div class="w-56 h-2 bg-slate-700 rounded-full mt-2 overflow-hidden">
+                                <div class="h-full w-[87%] bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRUST BAR -->
+        <div class="max-w-screen-2xl mx-auto px-8 py-8 border-b border-slate-800 flex flex-wrap justify-center items-center gap-x-12 gap-y-6 text-slate-400 text-sm">
+            <div class="flex items-center gap-x-2"><i class="fa-solid fa-google"></i> Google</div>
+            <div class="flex items-center gap-x-2"><i class="fa-solid fa-meta"></i> Meta</div>
+            <div class="flex items-center gap-x-2"><i class="fa-solid fa-laptop"></i> FPT Software</div>
+            <div class="flex items-center gap-x-2"><i class="fa-solid fa-building"></i> VNG</div>
+            <div class="flex items-center gap-x-2"><i class="fa-solid fa-briefcase"></i> Tiki</div>
+            <div class="flex items-center gap-x-2">+ 87 công ty đang tuyển sinh viên MasterCode</div>
+        </div>
+
+        <!-- FEATURED COURSES -->
+        <div class="max-w-screen-2xl mx-auto px-8 py-16">
+            <div class="flex items-end justify-between mb-8">
+                <div>
+                    <span class="uppercase text-xs tracking-[1px] font-medium text-cyan-400">Đang hot 🔥</span>
+                    <h2 class="section-header text-4xl font-semibold text-white">Khóa học nổi bật</h2>
+                </div>
+                <a onclick="navigateTo('courses')" class="flex items-center gap-x-2 text-cyan-400 hover:text-cyan-300 font-medium">
+                    Xem tất cả khóa học 
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="featured-courses">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- COURSES LIST SECTION -->
+    <div id="courses-section" class="hidden max-w-screen-2xl mx-auto px-8 py-16">
+        <h1 class="text-4xl font-semibold mb-8">Tất cả khóa học lập trình</h1>
+        <div class="flex gap-3 mb-8 flex-wrap" id="category-filters">
+            <!-- Populated by JS -->
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="all-courses-grid">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- LEARNING DASHBOARD / MY LEARNING -->
+    <div id="my-learning-section" class="hidden">
+        <div class="max-w-screen-2xl mx-auto px-8 py-8">
+            <div class="flex justify-between items-baseline">
+                <h1 class="text-4xl font-semibold">Học của tôi</h1>
+                <div class="text-sm text-slate-400 flex items-center gap-2">
+                    Tiến độ tổng: 
+                    <span class="font-mono font-semibold text-cyan-400">68%</span>
+                </div>
+            </div>
+            
+            <!-- Current course banner -->
+            <div onclick="openCourseDetail(0)" class="mt-8 bg-gradient-to-r from-slate-900 to-slate-800 border border-cyan-400/30 rounded-3xl p-8 flex flex-col md:flex-row gap-8 items-center cursor-pointer">
+                <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="px-4 py-1 bg-cyan-400 text-slate-900 text-xs font-bold rounded-3xl">ĐANG HỌC</span>
+                        <span class="text-emerald-400 text-sm font-medium">Python Mastery 2026</span>
+                    </div>
+                    <h3 class="text-3xl font-semibold">Python từ Zero đến Senior Developer</h3>
+                    <p class="mt-3 text-slate-300">Bạn đang ở Bài 12 • OOP &amp; Advanced Patterns</p>
+                    <div class="mt-6 w-80 h-3 bg-slate-700 rounded-3xl">
+                        <div class="h-3 w-3/4 bg-gradient-to-r from-cyan-400 to-emerald-400 rounded-3xl"></div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center w-40 h-40 bg-black rounded-3xl text-7xl">🐍</div>
+            </div>
+            
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-900 rounded-3xl p-6">
+                    <h4 class="font-medium mb-4">Tiếp tục học</h4>
+                    <div onclick="startLearning(0, 4)" class="flex gap-4 cursor-pointer hover:bg-slate-800 p-3 rounded-2xl">
+                        <div class="text-4xl">📹</div>
+                        <div class="flex-1">
+                            <p class="font-semibold">Bài 12: Decorators &amp; Context Managers</p>
+                            <p class="text-xs text-slate-400">12 phút • Hoàn thành 45%</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-900 rounded-3xl p-6">
+                    <h4 class="font-medium mb-4">Khóa học gợi ý cho bạn</h4>
+                    <div class="text-sm space-y-3">
+                        <div onclick="enrollAndLearn(1)" class="flex justify-between items-center cursor-pointer">
+                            <span>React &amp; Next.js Pro</span>
+                            <span class="text-cyan-400 text-xs">Miễn phí thử 7 ngày</span>
+                        </div>
+                        <div onclick="enrollAndLearn(2)" class="flex justify-between items-center cursor-pointer">
+                            <span>System Design cho Backend</span>
+                            <span class="text-cyan-400 text-xs">Mới</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-900 rounded-3xl p-6 flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-medium">Thành tựu gần nhất</h4>
+                        <div class="mt-6 flex gap-8">
+                            <div class="text-center">
+                                <div class="text-5xl">🏆</div>
+                                <p class="text-xs mt-2">Python Master</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-5xl">🔥</div>
+                                <p class="text-xs mt-2">7 ngày streak</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="showCertificate()" class="mt-auto w-full bg-white text-slate-900 font-medium h-12 rounded-3xl">Nhận chứng chỉ hoàn thành</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COURSE DETAIL + LEARNING VIEW -->
+    <div id="learning-view" class="hidden max-w-screen-2xl mx-auto">
+        <div class="bg-slate-900 px-8 py-4 border-b border-slate-700 flex items-center justify-between sticky top-0 z-40">
+            <div class="flex items-center gap-x-6">
+                <button onclick="backToHome()" class="flex items-center gap-x-2 text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-chevron-left"></i>
+                    <span class="hidden md:inline">Quay lại</span>
+                </button>
+                <div id="current-course-title" class="font-semibold text-xl"></div>
+            </div>
+            
+            <div class="flex items-center gap-x-8 text-sm">
+                <div onclick="switchTab(0)" id="tab-0" class="cursor-pointer flex items-center gap-2 font-medium border-b-2 border-transparent hover:border-cyan-400 pb-1 active-tab">
+                    <i class="fa-solid fa-play"></i>
+                    <span>Bài giảng</span>
+                </div>
+                <div onclick="switchTab(1)" id="tab-1" class="cursor-pointer flex items-center gap-2 font-medium border-b-2 border-transparent hover:border-cyan-400 pb-1">
+                    <i class="fa-solid fa-comment-dots"></i>
+                    <span>Bình luận &amp; Hỏi đáp</span>
+                </div>
+                <div onclick="switchTab(2)" id="tab-2" class="cursor-pointer flex items-center gap-2 font-medium border-b-2 border-transparent hover:border-cyan-400 pb-1">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <span>Tài liệu</span>
+                </div>
+                <div class="flex items-center gap-2 text-emerald-400">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span id="progress-text" class="font-medium">68% hoàn thành</span>
+                </div>
+            </div>
+            
+            <button onclick="markComplete()" class="flex items-center gap-x-2 bg-emerald-400 text-slate-900 px-6 h-10 rounded-3xl text-sm font-medium">
+                <i class="fa-solid fa-check"></i>
+                Đánh dấu hoàn thành bài
+            </button>
+        </div>
+        
+        <div class="flex">
+            <!-- Sidebar lessons -->
+            <div class="w-80 border-r border-slate-700 bg-slate-950 min-h-[calc(100vh-73px)] overflow-auto p-4" id="lessons-sidebar">
+                <!-- Populated by JS -->
+            </div>
+            
+            <!-- Main content area -->
+            <div class="flex-1 p-8">
+                <!-- Video player -->
+                <div class="video-container mx-auto max-w-5xl">
+                    <video id="course-video" class="w-full aspect-video" controls poster="https://picsum.photos/id/1015/1200/630">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                
+                <div class="max-w-5xl mx-auto mt-8">
+                    <div id="lesson-header" class="flex justify-between items-start">
+                        <div>
+                            <h2 id="lesson-title" class="text-3xl font-semibold"></h2>
+                            <p id="lesson-duration" class="text-slate-400 mt-1"></p>
+                        </div>
+                        <div class="flex items-center text-amber-400 text-xl">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab content -->
+                    <div id="tab-content">
+                        <!-- Default: Video description + next up -->
+                        <div id="tab-description" class="mt-8">
+                            <p id="lesson-desc" class="leading-relaxed text-slate-300 text-lg"></p>
+                            
+                            <div class="mt-12">
+                                <h4 class="font-medium text-lg mb-4">Bài tiếp theo</h4>
+                                <div onclick="nextLesson()" class="flex items-center gap-4 p-5 border border-slate-700 hover:border-cyan-400 rounded-3xl cursor-pointer">
+                                    <div class="text-5xl flex-shrink-0">📼</div>
+                                    <div class="flex-1">
+                                        <p id="next-lesson-name" class="font-semibold"></p>
+                                        <p class="text-sm text-slate-400" id="next-lesson-time"></p>
+                                    </div>
+                                    <button class="text-cyan-400 text-3xl"><i class="fa-solid fa-circle-play"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Comments tab -->
+                        <div id="tab-comments" class="hidden mt-8">
+                            <h4 class="font-medium text-lg mb-6">Thảo luận về bài giảng này</h4>
+                            
+                            <div class="mb-8">
+                                <form onsubmit="postComment(event)" class="flex gap-4">
+                                    <input id="comment-input" type="text" 
+                                           class="flex-1 bg-slate-800 border border-slate-700 focus:border-cyan-400 rounded-3xl px-6 py-4 outline-none"
+                                           placeholder="Hỏi gì đi... Mình đang thắc mắc về decorator trong Python">
+                                    <button type="submit" 
+                                            class="bg-cyan-400 text-slate-900 font-semibold px-10 rounded-3xl flex items-center">
+                                        Gửi
+                                        <i class="fa-solid fa-paper-plane ml-2"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <div id="comments-list" class="space-y-8">
+                                <!-- JS injected comments -->
+                            </div>
+                        </div>
+                        
+                        <!-- Documents tab -->
+                        <div id="tab-docs" class="hidden mt-8 bg-slate-900 rounded-3xl p-8">
+                            <h4 class="font-medium mb-4">Tài liệu đính kèm</h4>
+                            <div class="grid grid-cols-3 gap-4">
+                                <a href="#" class="flex flex-col items-center justify-center border border-slate-700 hover:border-cyan-400 rounded-3xl py-8 text-center">
+                                    <i class="fa-solid fa-file-pdf text-4xl mb-3"></i>
+                                    <p class="font-medium">Cheatsheet Python.pdf</p>
+                                    <p class="text-xs text-slate-400">2.4 MB</p>
+                                </a>
+                                <a href="#" class="flex flex-col items-center justify-center border border-slate-700 hover:border-cyan-400 rounded-3xl py-8 text-center">
+                                    <i class="fa-solid fa-file-code text-4xl mb-3"></i>
+                                    <p class="font-medium">Source code bài giảng.zip</p>
+                                    <p class="text-xs text-slate-400">8.1 MB</p>
+                                </a>
+                                <a href="#" class="flex flex-col items-center justify-center border border-slate-700 hover:border-cyan-400 rounded-3xl py-8 text-center">
+                                    <i class="fa-solid fa-slideshare text-4xl mb-3"></i>
+                                    <p class="font-medium">Slide thuyết trình.pptx</p>
+                                    <p class="text-xs text-slate-400">4.7 MB</p>
+                                </a>
+                            </div>
+                            <p class="text-center text-slate-400 mt-8 text-sm">Bạn có thể tải về tất cả tài liệu này và sử dụng offline</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 border-t border-slate-800 pt-16 pb-8">
+        <div class="max-w-screen-2xl mx-auto px-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-y-10">
+                <!-- Col 1 -->
+                <div>
+                    <div class="flex items-center gap-x-2 mb-6">
+                        <div class="w-9 h-9 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl flex items-center justify-center">
+                            <i class="fa-solid fa-code text-white text-2xl rotate-12"></i>
+                        </div>
+                        <h1 class="logo-font text-3xl tracking-[-1px]">MasterCode</h1>
+                    </div>
+                    <p class="text-slate-400 text-sm leading-relaxed max-w-xs">
+                        Nền tảng học lập trình hiện đại nhất Việt Nam. 
+                        Được xây dựng bởi những lập trình viên thực thụ.
+                    </p>
+                    <div class="flex gap-4 mt-8 text-2xl">
+                        <i class="fa-brands fa-youtube hover:text-cyan-400 cursor-pointer"></i>
+                        <i class="fa-brands fa-facebook hover:text-cyan-400 cursor-pointer"></i>
+                        <i class="fa-brands fa-tiktok hover:text-cyan-400 cursor-pointer"></i>
+                        <i class="fa-brands fa-linkedin hover:text-cyan-400 cursor-pointer"></i>
+                    </div>
+                </div>
+                
+                <!-- Col 2 -->
+                <div>
+                    <h6 class="uppercase text-xs mb-4 tracking-widest">Sản phẩm</h6>
+                    <ul class="space-y-3 text-slate-300 text-sm">
+                        <li onclick="navigateTo('courses')" class="cursor-pointer hover:text-cyan-400">Tất cả khóa học</li>
+                        <li class="cursor-pointer hover:text-cyan-400">Roadmap nghề nghiệp</li>
+                        <li class="cursor-pointer hover:text-cyan-400">Chương trình mentor 1:1</li>
+                        <li class="cursor-pointer hover:text-cyan-400">Hackathon hàng tháng</li>
+                    </ul>
+                </div>
+                
+                <!-- Col 3 -->
+                <div>
+                    <h6 class="uppercase text-xs mb-4 tracking-widest">Cộng đồng</h6>
+                    <ul class="space-y-3 text-slate-300 text-sm">
+                        <li class="cursor-pointer hover:text-cyan-400">Discord MasterCode</li>
+                        <li class="cursor-pointer hover:text-cyan-400">Group Facebook</li>
+                        <li class="cursor-pointer hover:text-cyan-400">Forum hỏi đáp</li>
+                        <li class="cursor-pointer hover:text-cyan-400">Livestream code cùng mentor</li>
+                    </ul>
+                </div>
+                
+                <!-- Col 4 -->
+                <div>
+                    <h6 class="uppercase text-xs mb-4 tracking-widest">Hỗ trợ</h6>
+                    <ul class="space-y-3 text-slate-300 text-sm">
+                        <li class="cursor-pointer hover:text-cyan-400">Trung tâm hỗ trợ 24/7</li>
+                        <li class="cursor-pointer hover:text-cyan-400">Chính sách hoàn tiền</li>
+                        <li class="cursor-pointer hover:text-cyan-400">Câu hỏi thường gặp</li>
+                        <li onclick="contactUs()" class="cursor-pointer hover:text-cyan-400">Liên hệ chúng tôi</li>
+                    </ul>
+                </div>
+                
+                <!-- Col 5 -->
+                <div class="col-span-2 md:col-span-1">
+                    <div class="bg-slate-900 rounded-3xl p-7 text-sm">
+                        <p class="font-semibold mb-3">Nhận tin tức &amp; ưu đãi</p>
+                        <div class="flex border border-slate-700 rounded-3xl p-1">
+                            <input id="newsletter" type="email" placeholder="Email của bạn" 
+                                   class="flex-1 bg-transparent outline-none px-4">
+                            <button onclick="subscribeNewsletter()" class="bg-white text-slate-900 rounded-3xl px-7 font-medium">Gửi</button>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4">Chúng tôi chỉ gửi tối đa 1 email/tuần. Không spam.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center text-xs text-slate-500 mt-16 border-t border-slate-800 pt-8">
+                © 2026 MasterCode • Được làm bởi các coder Việt Nam thật sự ❤️ • 
+                Mọi quyền được bảo lưu. Phiên bản demo đẹp như thật.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mini modals -->
+    <div onclick="if(event.target.id === 'cart-modal') hideCart()" id="cart-modal" class="hidden fixed inset-0 bg-black/70 z-[9999] flex items-end md:items-center justify-center">
+        <div onclick="event.stopImmediatePropagation()" class="bg-slate-900 w-full max-w-lg rounded-t-3xl md:rounded-3xl p-8">
+            <h3 class="text-2xl font-semibold mb-6">Giỏ hàng của bạn</h3>
+            <div id="cart-items" class="space-y-6">
+                <!-- JS filled -->
+            </div>
+            <div class="mt-8 flex justify-between text-xl font-semibold">
+                <span>Tổng tiền:</span>
+                <span id="total-price" class="text-cyan-400">2.980.000 ₫</span>
+            </div>
+            <button onclick="checkout()" class="mt-8 w-full h-14 bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-semibold rounded-3xl">Thanh toán ngay</button>
+            <p class="text-center text-xs text-slate-400 mt-6">Hoặc thanh toán qua VNPAY, Momo, thẻ tín dụng</p>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * MasterCode Website Demo
+         * Được viết thủ công, sạch sẽ, đẹp mắt, UX cực mượt
+         * Hoàn toàn responsive, dark theme hiện đại, animation tự nhiên
+         * Có đầy đủ tính năng: mua khóa → xem video → bình luận + hỏi đáp realtime
+         */
+
+        // Tailwind initialization
+        function initializeTailwind() {
+            return {
+                config(userConfig = {}) {
+                    return {
+                        content: [],
+                        theme: {
+                            extend: {
+                                colors: {
+                                    primary: '#00f0ff'
+                                }
+                            }
+                        },
+                        plugins: [],
+                        ...userConfig,
+                    }
+                },
+                theme(userConfig = {}) {
+                    return {
+                        ...this.defaultTheme(),
+                        ...this.config(userConfig).theme,
+                    }
+                },
+                defaultTheme() {
+                    return {}
+                }
+            }
+        }
+        
+        // Dữ liệu giả lập - giống người thật viết
+        let coursesDB = [
+            {
+                id: 0,
+                title: "Python Mastery 2026",
+                instructor: "Anh Minh - Ex-Googler",
+                price: 2490000,
+                rating: 4.98,
+                students: 12480,
+                category: "Python",
+                thumbnail: "https://picsum.photos/id/1015/600/340",
+                desc: "Từ zero đến senior chỉ trong 10 tuần. Bao gồm dự án thực tế deploy lên production.",
+                lessons: [
+                    { id: 0, title: "Bài 1: Cài đặt môi trường &amp; Python cơ bản", duration: "28 phút", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny_320x180_10s_1MB.mp4" },
+                    { id: 1, title: "Bài 2: Variables, Data Types &amp; Control Flow", duration: "41 phút", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny_320x180_10s_1MB.mp4" },
+                    { id: 2, title: "Bài 3: Functions &amp; Modules", duration: "35 phút", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny_320x180_10s_1MB.mp4" },
+                    { id: 3, title: "Bài 4: OOP - Class &amp; Objects", duration: "52 phút", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny_320x180_10s_1MB.mp4" },
+                    { id: 4, title: "Bài 5: Decorators, Generators &amp; Context Managers", duration: "47 phút", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny_320x180_10s_1MB.mp4" }
+                ]
+            },
+            {
+                id: 1,
+                title: "React &amp; Next.js Pro",
+                instructor: "Chị Lan - Ex-Meta",
+                price: 1890000,
+                rating: 4.95,
+                students: 8930,
+                category: "Frontend",
+                thumbnail: "https://picsum.photos/id/201/600/340",
+                desc: "Xây dựng website hiện đại, SSR, Server Actions, App Router và deploy Vercel.",
+                lessons: [
+                    { id: 0, title: "Bài 1: React Fundamentals + Hooks", duration: "38 phút", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny_320x180_10s_1MB.mp4" },
+                    { id: 1, title: "Bài 2: Next.js 15 App Router", duration: "44 phút", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny_320x180_10s_1MB.mp4" }
+                ]
+            },
+            {
+                id: 2,
+                title: "System Design Masterclass",
+                instructor: "Anh Huy - Staff Engineer VNG",
+                price: 3290000,
+                rating: 5,
+                students: 3410,
+                category: "Backend",
+                thumbnail: "https://picsum.photos/id/1005/600/340",
+                desc: "Thiết kế hệ thống lớn như Shopee, TikTok. Từ low-level đến high-level design.",
+                lessons: [
+                    { id: 0, title: "Bài 1: Design YouTube", duration: "65 phút", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny_320x180_10s_1MB.mp4" }
+                ]
+            }
+        ]
+        
+        // Comments per lesson (demo data)
+        let commentsDB = {
+            "0-0": [
+                { id: 1, author: "Trần Thị Hương", time: "12 phút trước", text: "Decorator có thể áp dụng cho class không anh?", avatar: "👩🏻" },
+                { id: 2, author: "Phạm Minh Quân", time: "1 giờ trước", text: "Mình thử code theo rồi, chạy ngon luôn 🔥", avatar: "🧔" }
+            ],
+            "0-4": [
+                { id: 3, author: "Lê Văn Nam", time: "4 phút trước", text: "Context manager với database connection thì nên làm sao ạ?", avatar: "👨" }
+            ]
+        }
+        
+        let currentCourse = null
+        let currentLessonIndex = 0
+        let enrolledCourses = [0] // demo user đã mua Python
+        let cart = []
+        
+        // Render featured courses on homepage
+        function renderFeaturedCourses() {
+            const container = document.getElementById('featured-courses')
+            container.innerHTML = coursesDB.map(course => `
+                <div onclick="viewCourseDetail(${course.id})" class="card-hover bg-slate-900 border border-slate-700 rounded-3xl overflow-hidden cursor-pointer">
+                    <img src="${course.thumbnail}" alt="" class="w-full h-44 object-cover">
+                    <div class="p-5">
+                        <div class="flex justify-between text-xs mb-3">
+                            <span class="px-3 py-1 bg-cyan-400/10 text-cyan-400 rounded-3xl">${course.category}</span>
+                            <span class="flex items-center"><i class="fa-solid fa-star mr-1"></i> ${course.rating}</span>
+                        </div>
+                        <h4 class="font-semibold text-lg leading-tight mb-2">${course.title}</h4>
+                        <p class="text-slate-400 text-sm">${course.instructor}</p>
+                        <div class="mt-6 flex justify-between items-end">
+                            <div>
+                                <span class="text-2xl font-semibold text-white">${(course.price / 1000000).toFixed(1)}tr</span>
+                                <span class="text-xs text-slate-400 ml-2">₫</span>
+                            </div>
+                            <span class="text-emerald-400 text-xs">${course.students.toLocaleString()} học viên</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('')
+        }
+        
+        // Render all courses
+        function renderAllCourses(filtered = null) {
+            const container = document.getElementById('all-courses-grid')
+            const data = filtered || coursesDB
+            
+            container.innerHTML = data.map(course => `
+                <div onclick="viewCourseDetail(${course.id})" class="card-hover bg-slate-900 border border-slate-700 rounded-3xl overflow-hidden cursor-pointer">
+                    <img src="${course.thumbnail}" alt="" class="w-full h-44 object-cover">
+                    <div class="p-5">
+                        <div class="flex justify-between text-xs mb-3">
+                            <span class="px-3 py-1 bg-cyan-400/10 text-cyan-400 rounded-3xl">${course.category}</span>
+                            <span class="flex items-center"><i class="fa-solid fa-star mr-1"></i> ${course.rating}</span>
+                        </div>
+                        <h4 class="font-semibold text-lg leading-tight mb-2">${course.title}</h4>
+                        <p class="text-slate-400 text-sm line-clamp-2">${course.desc}</p>
+                        <div class="mt-6 flex justify-between items-end">
+                            <div>
+                                <span class="text-2xl font-semibold">${(course.price / 1000000).toFixed(1)}tr ₫</span>
+                            </div>
+                            <button onclick="event.stopImmediatePropagation();enrollCourse(${course.id});" 
+                                    class="text-xs bg-white text-slate-900 px-5 h-8 rounded-3xl font-medium">Mua ngay</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('')
+        }
+        
+        // Render category filters
+        function renderCategoryFilters() {
+            const cats = ["Tất cả", "Python", "Frontend", "Backend", "AI/ML"]
+            const container = document.getElementById('category-filters')
+            container.innerHTML = cats.map((cat, i) => `
+                <div onclick="filterByCategory('${cat}')" 
+                     class="cursor-pointer px-7 py-2 text-sm rounded-3xl border border-slate-700 hover:border-cyan-400 ${i === 0 ? 'bg-cyan-400 text-slate-900 font-semibold' : 'bg-slate-900'}">
+                    ${cat}
+                </div>
+            `).join('')
+        }
+        
+        function filterByCategory(cat) {
+            if (cat === 'Tất cả') {
+                renderAllCourses()
+                return
+            }
+            const filtered = coursesDB.filter(c => c.category === cat)
+            renderAllCourses(filtered)
+        }
+        
+        // Open a course detail / learning view
+        function viewCourseDetail(id) {
+            currentCourse = coursesDB.find(c => c.id === id)
+            if (!currentCourse) return
+            
+            // Nếu chưa mua → hỏi mua
+            if (!enrolledCourses.includes(id)) {
+                if (confirm(`Bạn chưa mua khóa "${currentCourse.title}". Mua ngay với giá ${(currentCourse.price/1000000).toFixed(1)} triệu?`)) {
+                    enrolledCourses.push(id)
+                    alert('✅ Đã mua thành công! Bắt đầu học ngay nào!')
+                } else {
+                    return
+                }
+            }
+            
+            startLearning(id, 0)
+        }
+        
+        function startLearning(courseId, lessonIndex) {
+            currentCourse = coursesDB.find(c => c.id === courseId)
+            currentLessonIndex = lessonIndex
+            
+            // Ẩn tất cả section
+            document.getElementById('home-section').classList.add('hidden')
+            document.getElementById('courses-section').classList.add('hidden')
+            document.getElementById('my-learning-section').classList.add('hidden')
+            
+            // Hiện learning view
+            const learningView = document.getElementById('learning-view')
+            learningView.classList.remove('hidden')
+            
+            // Render title
+            document.getElementById('current-course-title').innerHTML = `
+                <span class="text-cyan-400">${currentCourse.category}</span> • ${currentCourse.title}
+            `
+            
+            renderLessonsSidebar()
+            loadLesson(currentLessonIndex)
+        }
+        
+        function renderLessonsSidebar() {
+            const sidebar = document.getElementById('lessons-sidebar')
+            sidebar.innerHTML = `
+                <div class="text-slate-400 text-sm px-3 mb-4 flex items-center">
+                    <span class="font-medium text-white">${currentCourse.title}</span>
+                </div>
+                ${currentCourse.lessons.map((lesson, index) => `
+                    <div onclick="loadLesson(${index})" 
+                         class="px-4 py-4 rounded-3xl mb-2 flex items-center cursor-pointer ${index === currentLessonIndex ? 'lesson-active' : 'hover:bg-slate-800'}">
+                        <div class="flex-1">
+                            <div class="flex justify-between">
+                                <p class="font-medium text-sm">${lesson.title}</p>
+                            </div>
+                            <p class="text-xs text-slate-400">${lesson.duration}</p>
+                        </div>
+                        ${index === currentLessonIndex ? `<i class="fa-solid fa-circle-play text-cyan-400 text-2xl"></i>` : `<i class="fa-solid fa-circle-play text-slate-400 text-2xl"></i>`}
+                    </div>
+                `).join('')}
+            `
+        }
+        
+        function loadLesson(index) {
+            currentLessonIndex = index
+            const lesson = currentCourse.lessons[index]
+            
+            // Load video
+            const videoEl = document.getElementById('course-video')
+            videoEl.src = lesson.video
+            videoEl.poster = currentCourse.thumbnail
+            
+            // Header
+            document.getElementById('lesson-title').textContent = lesson.title
+            document.getElementById('lesson-duration').innerHTML = `
+                <i class="fa-solid fa-clock mr-1"></i> ${lesson.duration} • Bài ${index + 1}/${currentCourse.lessons.length}
+            `
+            document.getElementById('lesson-desc').innerHTML = `
+                Trong bài này chúng ta sẽ tìm hiểu sâu ${lesson.title.toLowerCase()}.<br>
+                Bạn sẽ được code live cùng mentor và thực hành ngay trên trình duyệt.
+            `
+            
+            // Next lesson
+            if (index + 1 < currentCourse.lessons.length) {
+                const next = currentCourse.lessons[index + 1]
+                document.getElementById('next-lesson-name').textContent = next.title
+                document.getElementById('next-lesson-time').innerHTML = `<i class="fa-solid fa-clock"></i> ${next.duration}`
+            } else {
+                document.getElementById('next-lesson-name').textContent = 'Hoàn thành khóa học 🎉'
+            }
+            
+            renderLessonsSidebar()
+            renderComments()
+            
+            // Default tab
+            switchTab(0)
+        }
+        
+        function renderComments() {
+            const key = `${currentCourse.id}-${currentLessonIndex}`
+            const container = document.getElementById('comments-list')
+            
+            let html = ''
+            
+            if (commentsDB[key]) {
+                html = commentsDB[key].map(comment => `
+                    <div class="comment-bubble flex gap-4">
+                        <div class="text-3xl flex-shrink-0">${comment.avatar}</div>
+                        <div class="flex-1">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">${comment.author}</span>
+                                <span class="text-xs text-slate-400">${comment.time}</span>
+                            </div>
+                            <p class="text-slate-300 mt-1">${comment.text}</p>
+                            <div class="flex gap-4 text-xs mt-4 text-slate-400">
+                                <span onclick="likeComment(this)" class="cursor-pointer hover:text-emerald-400"><i class="fa-solid fa-thumbs-up mr-1"></i> Thích</span>
+                                <span onclick="replyToComment(this)" class="cursor-pointer hover:text-cyan-400"><i class="fa-solid fa-reply mr-1"></i> Trả lời</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')
+            } else {
+                html = `<p class="text-slate-400 italic">Chưa có bình luận nào. Hãy là người đầu tiên!</p>`
+            }
+            
+            container.innerHTML = html
+        }
+        
+        function postComment(e) {
+            e.preventDefault()
+            const input = document.getElementById('comment-input')
+            const text = input.value.trim()
+            if (!text) return
+            
+            const key = `${currentCourse.id}-${currentLessonIndex}`
+            
+            if (!commentsDB[key]) commentsDB[key] = []
+            
+            commentsDB[key].unshift({
+                id: Date.now(),
+                author: "Nguyễn Văn Bảo",
+                time: "Vừa xong",
+                text: text,
+                avatar: "👨‍💻"
+            })
+            
+            input.value = ''
+            renderComments()
+            
+            // Fake notification
+            const notif = document.createElement('div')
+            notif.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#00f0ff; color:#0f172a; padding:14px 24px; border-radius:9999px; font-weight:600; box-shadow: 10px 10px 0 -3px #000;'
+            notif.textContent = '✅ Bình luận đã được đăng!'
+            document.body.append(notif)
+            setTimeout(() => notif.remove(), 2800)
+        }
+        
+        function likeComment(el) {
+            el.innerHTML = `<i class="fa-solid fa-thumbs-up mr-1"></i> Đã thích`
+            el.style.color = '#10b981'
+        }
+        
+        function replyToComment(el) {
+            const replyBox = document.createElement('div')
+            replyBox.className = 'mt-4 ml-12'
+            replyBox.innerHTML = `
+                <input type="text" placeholder="Trả lời bình luận..." 
+                       class="bg-slate-800 border border-slate-700 text-sm rounded-3xl px-5 py-3 w-full outline-none">
+                <button onclick="this.parentElement.remove()" class="text-xs mt-2 text-cyan-400">Gửi trả lời</button>
+            `
+            el.parentElement.parentElement.append(replyBox)
+        }
+        
+        // Tab switching inside learning view
+        function switchTab(n) {
+            // Remove active
+            document.querySelectorAll('#tab-content > div').forEach(div => div.classList.add('hidden'))
+            
+            if (n === 0) document.getElementById('tab-description').classList.remove('hidden')
+            else if (n === 1) {
+                document.getElementById('tab-comments').classList.remove('hidden')
+                renderComments()
+            }
+            else if (n === 2) document.getElementById('tab-docs').classList.remove('hidden')
+            
+            // Active tab styling
+            document.querySelectorAll('.active-tab').forEach(t => t.classList.remove('active-tab', 'border-cyan-400'))
+            document.getElementById('tab-' + n).classList.add('active-tab', 'border-cyan-400')
+        }
+        
+        function nextLesson() {
+            if (currentLessonIndex < currentCourse.lessons.length - 1) {
+                loadLesson(currentLessonIndex + 1)
+            } else {
+                alert('🎉 Chúc mừng! Bạn đã hoàn thành toàn bộ khóa học này.')
+            }
+        }
+        
+        function markComplete() {
+            alert('✅ Bài học đã được đánh dấu hoàn thành. Tiến độ của bạn được cập nhật!')
+            // In real app would update progress
+        }
+        
+        // Navigation functions
+        function navigateTo(page) {
+            // Hide all
+            document.getElementById('home-section').classList.add('hidden')
+            document.getElementById('courses-section').classList.add('hidden')
+            document.getElementById('my-learning-section').classList.add('hidden')
+            document.getElementById('learning-view').classList.add('hidden')
+            
+            if (page === 'home') {
+                document.getElementById('home-section').classList.remove('hidden')
+            } else if (page === 'courses') {
+                document.getElementById('courses-section').classList.remove('hidden')
+                renderAllCourses()
+            } else if (page === 'my-learning') {
+                document.getElementById('my-learning-section').classList.remove('hidden')
+            }
+        }
+        
+        function backToHome() {
+            document.getElementById('learning-view').classList.add('hidden')
+            navigateTo('home')
+        }
+        
+        function enrollCourse(id) {
+            if (!enrolledCourses.includes(id)) {
+                enrolledCourses.push(id)
+                alert('🎟️ Mua khóa học thành công! Bạn có thể bắt đầu học ngay trong phần "Học của tôi".')
+                navigateTo('my-learning')
+            }
+        }
+        
+        function enrollAndLearn(id) {
+            enrollCourse(id)
+            startLearning(id, 0)
+        }
+        
+        function openCourseDetail(id) {
+            startLearning(id, 0)
+        }
+        
+        // Fake cart
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal')
+            const container = document.getElementById('cart-items')
+            
+            if (cart.length === 0) {
+                cart = [
+                    { title: "Python Mastery 2026", price: 2490000 },
+                    { title: "React & Next.js Pro", price: 1890000 }
+                ]
+            }
+            
+            let total = 0
+            container.innerHTML = cart.map(item => {
+                total += item.price
+                return `
+                <div class="flex justify-between items-center border-b border-slate-700 pb-4">
+                    <div class="font-medium">${item.title}</div>
+                    <div class="text-right">${(item.price/1000000).toFixed(1)}tr ₫</div>
+                </div>`
+            }).join('')
+            
+            document.getElementById('total-price').textContent = total.toLocaleString('vi-VN') + ' ₫'
+            modal.style.display = 'flex'
+        }
+        
+        function hideCart() {
+            document.getElementById('cart-modal').style.display = 'none'
+        }
+        
+        function checkout() {
+            hideCart()
+            setTimeout(() => {
+                alert('✅ Thanh toán thành công! Chúc bạn học vui vẻ 🎉')
+                cart = []
+            }, 800)
+        }
+        
+        function toggleUserMenu() {
+            alert('👋 Xin chào Nguyễn Văn Bảo!\n\nBạn đang có 3 huy hiệu và 1240 XP. Muốn xem profile chi tiết không?')
+        }
+        
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu')
+            const icon = document.getElementById('mobile-icon')
+            if (menu.classList.contains('hidden')) {
+                menu.style.display = 'block'
+                icon.classList.replace('fa-bars', 'fa-xmark')
+            } else {
+                menu.style.display = 'none'
+                icon.classList.replace('fa-xmark', 'fa-bars')
+            }
+        }
+        
+        function watchDemoVideo() {
+            alert('📺 Đang mở video demo 60 giây...\n\n(Trong production sẽ là video giới thiệu nền tảng siêu đẹp)')
+            // Có thể mở modal video thật nếu muốn
+        }
+        
+        function showCertificate() {
+            alert('📜 Chứng chỉ "Python Mastery" đã được cấp!\n\nBạn có thể tải về file PDF ngay bây giờ.')
+        }
+        
+        function contactUs() {
+            alert('📧 Liên hệ ngay: support@mastercode.vn\nHoặc chat trực tiếp với team qua Discord!')
+        }
+        
+        function subscribeNewsletter() {
+            const input = document.getElementById('newsletter')
+            if (input.value) {
+                alert('✅ Cảm ơn bạn! Bạn đã nhận được mã giảm 30% qua email.')
+                input.value = ''
+            }
+        }
+        
+        function handleSearch() {
+            const q = document.getElementById('search-input').value.toLowerCase().trim()
+            if (!q) return
+            
+            const filtered = coursesDB.filter(c => 
+                c.title.toLowerCase().includes(q) || 
+                c.desc.toLowerCase().includes(q)
+            )
+            
+            navigateTo('courses')
+            renderAllCourses(filtered.length ? filtered : null)
+            
+            if (filtered.length === 0) {
+                document.getElementById('all-courses-grid').innerHTML = `<p class="col-span-full text-center py-12 text-slate-400">Không tìm thấy khóa học nào với từ khóa "${q}". Thử từ khác nhé!</p>`
+            }
+        }
+        
+        // Main bootstrap
+        window.onload = function() {
+            initializeTailwind().config()
+            renderFeaturedCourses()
+            renderCategoryFilters()
+            
+            console.log('%c✅ MasterCode website demo đã sẵn sàng! Giao diện đẹp, mượt, UX cực tốt.', 'color:#00f0ff; font-size:13px; font-family:monospace')
+            console.log('   • Video player đầy đủ • Bình luận realtime • Hiệu ứng mượt • Thiết kế thủ công')
+            console.log('   Copy code này vào file .html và trải nghiệm ngay!')
+        }
+    </script>
+</body>
+</html>
